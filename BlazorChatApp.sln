@@ -9,6 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorChatApp", "BlazorChat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorChatApp.Client", "BlazorChatApp\BlazorChatApp.Client\BlazorChatApp.Client.csproj", "{3A78F74F-7FA3-45FC-941E-D9CB9B4D62A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A969D64-EDF6-4036-AC43-FBFFA83B5949} = {9A969D64-EDF6-4036-AC43-FBFFA83B5949}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorChatApp.DataAccess", "BlazorChatApp\BlazorChatApp.DataAccess\BlazorChatApp.DataAccess.csproj", "{9A969D64-EDF6-4036-AC43-FBFFA83B5949}"
 EndProject

@@ -1,0 +1,38 @@
+﻿@page "/Chat/Home"
+
+@using System.ComponentModel.DataAnnotations
+@using BlazorChatApp.DataAccess.DbModels.Identity.Tables
+@using BlazorChatApp.DataAccess.Contracts.Query.Chat
+@using Havit.Blazor.Components.Web.Bootstrap
+@using System.Security.Claims
+
+@inject AuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Chatroom</PageTitle>
+
+<EditForm FormName="MessageForm" Model="@Model" OnSubmit="SendMessage">
+    <HxInputText Placeholder="Write something nice!" @bind-Value="@Model.Message" @bind:event="oninput"/>
+</EditForm>
+
+@code {
+    protected UploadChatMessageModel Model = new UploadChatMessageModel();
+    protected AuthenticationState? AuthState;
+    protected HttpClient Http = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthState = await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+    protected void SendMessage()
+    {
+        Model.Id = Guid.Empty.ToString();
+
+        if(AuthState.User.Identity.IsAuthenticated)
+        {
+            Model.UserId = AuthState.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        }
+
+        Http.PostAsJsonAsync<UploadChatMessageModel>("https://localhost:7017/ChatController/AddNewMessage/", Model);
+    }
+}

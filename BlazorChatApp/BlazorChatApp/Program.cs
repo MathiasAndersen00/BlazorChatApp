@@ -1,8 +1,10 @@
+using BlazorChatApp;
 using BlazorChatApp.Components;
 using BlazorChatApp.Components.Account;
 using BlazorChatApp.DataAccess.DbModels.Identity;
 using BlazorChatApp.DataAccess.DbModels.Identity.Tables;
-using Microsoft.AspNetCore.Components.Authorization;
+using Havit.Blazor.Components.Web;
+using BlazorChatApp.DataAccess.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +17,27 @@ builder.Services.AddDbContext<UserIdentityDbContext>(options =>
         b => b.MigrationsAssembly("BlazorChatApp.DataAccess"));
 });
 
+builder.Services.AddDbContext<ChatDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultChatConnection")
+        ?? throw new InvalidOperationException("Connection string 'DefaultChatConnection' not found."),
+        b => b.MigrationsAssembly("BlazorChatApp.DataAccess"));
+});
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHxServices();
+builder.Services.AddHxMessenger();
+builder.Services.AddHxMessageBoxHost();
+
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
+builder.ConfigureControllers();
+
+builder.Services.AddScoped<UserIdentityDbContext>();
+builder.Services.AddScoped<ChatDbContext>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -39,10 +54,13 @@ builder.Services.AddIdentityCore<US_User>(options => options.SignIn.RequireConfi
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<US_User>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+builder.ConfigureAdapters();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -51,7 +69,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -64,7 +81,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorChatApp.Client._Imports).Assembly);
 
-// Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();

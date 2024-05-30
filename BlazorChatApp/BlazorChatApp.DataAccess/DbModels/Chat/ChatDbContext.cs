@@ -1,7 +1,7 @@
 ﻿using BlazorChatApp.DataAccess.DbModels.Chat.Tables;
 using Microsoft.EntityFrameworkCore;
 
-namespace IntervjuChat.DataAccess.Model;
+namespace BlazorChatApp.DataAccess.Model;
 
 public class ChatDbContext(DbContextOptions<ChatDbContext> options) : DbContext(options)
 {

@@ -1,9 +1,8 @@
-﻿using BlazorChatApp.DataAccess.DbModels.Identity;
-using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorChatApp.DataAccess.DbModels;
+namespace BlazorChatApp.DataAccess.DbModels.Identity;
 
 public class UserIdentityDbContextFactory : IDesignTimeDbContextFactory<UserIdentityDbContext>
 {

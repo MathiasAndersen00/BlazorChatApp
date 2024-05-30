@@ -3,5 +3,5 @@
 public class CH_Chat : DbModelBase
 {
     public virtual string? UserId { get; set; }
-    public string Message { get; set; } = string.Empty;
+    public virtual string Message { get; set; } = string.Empty;
 }

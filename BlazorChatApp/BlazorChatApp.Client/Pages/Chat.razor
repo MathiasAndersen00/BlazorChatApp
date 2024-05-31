@@ -1,4 +1,5 @@
 ﻿@page "/Chat/Home"
+@rendermode InteractiveWebAssembly
 
 @using System.ComponentModel.DataAnnotations
 @using BlazorChatApp.DataAccess.DbModels.Identity.Tables
@@ -11,7 +12,8 @@
 <PageTitle>Chatroom</PageTitle>
 
 <EditForm FormName="MessageForm" Model="@Model" OnSubmit="SendMessage">
-    <HxInputText Placeholder="Write something nice!" @bind-Value="@Model.Message" @bind:event="oninput"/>
+    <HxInputText Placeholder="Write something nice!" @bind-Value="@Model.Message"/>
+    <HxButton Text="Send" Color="ThemeColor.Primary"></HxButton>
 </EditForm>
 
 @code {
@@ -33,6 +35,6 @@
             Model.UserId = AuthState.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
         }
 
-        Http.PostAsJsonAsync<UploadChatMessageModel>("https://localhost:7017/ChatController/AddNewMessage/", Model);
+        Http.PostAsJsonAsync<UploadChatMessageModel>("https://localhost:7017/api/ChatController/AddNewMessage/", Model);
     }
 }
